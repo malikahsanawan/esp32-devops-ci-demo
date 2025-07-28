@@ -1,5 +1,5 @@
 
-# ESP32 DevOps CI/CD Demo
+# ESP32 DevOps CI Demo
 
 This repo demonstrates:
 
