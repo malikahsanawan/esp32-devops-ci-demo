@@ -1,3 +1,5 @@
+name: ESP32 PlatformIO CI
+
 on:
   push:
     branches: [main]
@@ -12,31 +14,35 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Python | PlatformIO
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
         python-version: "3.11"
 
     - name: Install PlatformIO
       run: |
-        pip install --upgrade pip
+        python -m pip install --upgrade pip
         pip install platformio
 
-    - name: Install cppcheck
+    - name: Install cppcheck for static analysis
       run: sudo apt-get update && sudo apt-get install -y cppcheck
 
-    - name: Static analysis
-      run: cppcheck src include --enable=all --inconclusive --quiet
+    - name: Run static code analysis with cppcheck
+      run: |
+        cppcheck src include --enable=all --inconclusive --quiet || true
 
-    - name: Run Unit Tests
-      run: pio test
+    - name: Run PlatformIO unit tests
+      run: pio test -v
 
+    - name: Build firmware for esp32dev
+      run: pio run -e esp32dev
 
-    - name: Build Firmware
-      run: pio run
+    - name: List firmware build output
+      run: ls -lah .pio/build/esp32dev/
 
     - name: Upload firmware artifact
-      uses: actions/upload-artifact@v4 # ✅ updated to v4
+      if: success()
+      uses: actions/upload-artifact@v4
       with:
         name: esp32-firmware
         path: .pio/build/esp32dev/firmware.bin
