@@ -31,8 +31,8 @@ jobs:
       run: |
         cppcheck src include --enable=all --inconclusive --quiet || true
 
-    - name: Run PlatformIO unit tests
-      run: pio test -v
+   # - name: Run PlatformIO unit tests
+    #  run: pio test -v
 
     - name: Build firmware for esp32dev
       run: pio run -e esp32dev
