@@ -28,6 +28,10 @@ jobs:
     - name: Static analysis
       run: cppcheck src include --enable=all --inconclusive --quiet
 
+    - name: Run Unit Tests
+      run: pio test
+
+
     - name: Build Firmware
       run: pio run
 
